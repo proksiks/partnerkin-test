@@ -4,8 +4,6 @@
             <div class="modal__wrapper">
                 <h1 class="modal__title">{{ title }}</h1>
                 <forms-feedback-ui />
-
-
                 <button class="modal__close" @click="model = false">X</button>
             </div>
         </div>
@@ -15,7 +13,7 @@
 <script setup lang="ts">
 const model = defineModel({
     type: Boolean,
-    default: true
+    default: false
 })
 
 defineProps<{ title: string }>()

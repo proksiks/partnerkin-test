@@ -18,7 +18,7 @@
                     {{ task.time }}
                 </div>
             </div>
-            <button class="task__button" @click="show = true">Взять задачу</button>
+            <shared-button-ui class="task__button" @click="show = true">Взять задачу</shared-button-ui>
         </div>
     </div>
 </template>
@@ -28,10 +28,6 @@ import type { ITask } from '~/components/task/model'
 defineProps<{ task: ITask }>()
 
 const { show } = storeToRefs(useFeedbackModal())
-
-const openModal = () => {
-    show.value = true
-}
 
 useHead({
     htmlAttrs: {

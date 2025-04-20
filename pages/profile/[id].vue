@@ -3,7 +3,7 @@
         <shared-breadcrumbs-ui :path="breadcrumbs" />
         <div class="profile-page__wrapper">
             <div class="profile-page__left-side">
-                <user-ui class="profile-page__card" :user="user" />
+                <user-ui class="profile-page__card" :user="user || defaultValue" />
             </div>
             <div class="profile-page__right-side">
                 <div class="profile-page__head">
@@ -14,8 +14,8 @@
                     </form>
                 </div>
                 <ul class="profile-page__tasks">
-                    <li class="profile-page__task" v-for="item in 10" :key="item">
-                        <task-ui :task="task" @click="test" />
+                    <li class="profile-page__task" v-for="task in filteredTasks" :key="task.id">
+                        <task-ui :task="task" @click="openModal" />
                     </li>
                 </ul>
             </div>
@@ -25,45 +25,45 @@
 
 <script setup lang="ts">
 const search = ref('')
-
 const route = useRoute()
+const defaultValue = { id: 0, name: '', avatar: '', tag: '', socials: [] }
+const { data: user } = await useFetch(`/api/users/${route.params.id}`)
+const { data: tasks } = await useFetch(`/api/users/${route.params.id}/tasks`)
 
-const task = reactive({
-    id: 1,
-    type: 'Дизайн',
-    title: 'Сделать креативы для ВК',
-    text: 'Сделать креативы в ВК, дешево, под арбитражную тематику Портфолио - обязательно Сделать креативы в ВК, дешево, под арбитражную тематику Портфолио - обязательно Сделать креативы в ВК, дешево, под арбитражную тематику Портфолио - обязательно',
-    time: '5 дней',
-    payment: '500 руб',
-})
-
-const user = reactive({
-    id: 1,
-    name: 'Титова Елена Николаевна',
-    avatar: '/images/profile/photo/photo.jpg',
-    tag: 'username',
-    socials: [
-        { name: 'vkontakte', link: '#' },
-        { name: 'instagram', link: '#' },
-        { name: 'facebook', link: '#' },
-        { name: 'twitter', link: '#' },
-    ],
+const filteredTasks = computed(() => {
+    if (!tasks.value) return []
+    if (!search.value) return tasks.value
+    
+    const searchLower = search.value.toLowerCase()
+    return tasks.value.filter(task =>
+        task.title.toLowerCase().includes(searchLower) ||
+        task.text.toLowerCase().includes(searchLower)
+    )
 })
 
 const breadcrumbs = ref([
-    { name: 'Все задания', path: '/' },
+    { name: 'Все профили', path: '/' },
 ])
 
-breadcrumbs.value.push({
-    name: `Профиль ${user.tag}`,
-    path: `/profile/${route.params.id}`,
+watchEffect(() => {
+    if (user.value) {
+        breadcrumbs.value = [
+            { name: 'Все профили', path: '/' },
+            { name: `Профиль ${user.value.tag}`, path: `/profile/${route.params.id}` },
+        ]
+    }
 })
 
-useHead({ title: 'Профиль', meta: [{ name: 'description', content: 'Профиль' }] })
+const { show } = storeToRefs(useFeedbackModal())
 
-const test = () => {
-    console.log('test')
+const openModal = () => {
+    show.value = true
 }
+
+useHead({ 
+    title: user.value ? `Профиль ${user.value.name}` : 'Профиль', 
+    meta: [{ name: 'description', content: 'Профиль пользователя' }] 
+})
 </script>
 
 <style lang="scss">
