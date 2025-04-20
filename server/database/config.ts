@@ -2,6 +2,11 @@ import sqlite3 from 'sqlite3';
 const { Database } = sqlite3;
 import { join } from 'path';
 
+// ТАК ХРАНИТЬ БД НЕ СТОИТ, ЭТО ДЛЯ УЧЕБНОГО ПРОЕКТА
+// ЛУЧШЕ ВЫНЕСТИ БД НА ОТДЕЛЬНЫЙ СЕРВЕР И ДОБАВИТЬ КОНФИГУРАЦИЮ СЕРВЕРА ДЛЯ НЕГО
+// САМ BACKEND ТОЖЕ ЛУЧШЕ ВЫНЕСТИ НА ОТСДЕЛЬНЫЙ СЕРВЕР
+// Что бы 3 составляющих лежали на отдельных речурсах 
+
 const dbPath = join(process.cwd(), 'server/database/tasks.db');
 
 export const db = new Database(dbPath, (err) => {

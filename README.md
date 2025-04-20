@@ -1,3 +1,7 @@
+Рекомендации к расширениям 
+1. CSS Navigation
+2. CSS Peek
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

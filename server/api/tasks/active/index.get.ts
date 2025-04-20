@@ -1,27 +1,19 @@
-import { H3Event } from 'h3'
+import { db } from '~/server/database/config'
 
-interface Task {
-    id: number
-    type: string
-    title: string
-    text: string
-    payment: string
-    time: string
-}
+export default defineEventHandler(async () => {
+    try {
+        const tasks = await new Promise((resolve, reject) => {
+            db.all('SELECT * FROM tasks WHERE status = ?', ['active'], (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
 
-export default defineEventHandler(async (event: H3Event) => {
-    // В реальном приложении здесь будет запрос к базе данных
-    // Сейчас возвращаем тестовые данные
-    const activeTasks: Task[] = [
-        {
-            id: 1,
-            type: 'Тестовое задание',
-            title: 'Первое активное задание',
-            text: 'Описание первого активного задания',
-            payment: '1000 ₽',
-            time: '2 часа'
-        }
-    ]
-
-    return activeTasks
+        return tasks;
+    } catch (error) {
+        throw createError({
+            statusCode: 500,
+            message: 'Ошибка при получении активных задач'
+        });
+    }
 })
