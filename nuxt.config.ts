@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     '@vueuse/nuxt',
+    '@formkit/auto-animate/nuxt',
     ['@pinia/nuxt', { autoImports: ['defineStore', 'acceptHMRUpdate'] }],
   ],
   icon: {

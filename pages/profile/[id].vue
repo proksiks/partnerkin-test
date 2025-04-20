@@ -13,7 +13,7 @@
                             placeholder="Поиск" />
                     </form>
                 </div>
-                <ul class="profile-page__tasks">
+                <ul class="profile-page__tasks" v-auto-animate>
                     <li class="profile-page__task" v-for="task in filteredTasks" :key="task.id">
                         <task-ui :task="task" @click="openModal" />
                     </li>
@@ -35,10 +35,20 @@ const filteredTasks = computed(() => {
     if (!search.value) return tasks.value
     
     const searchLower = search.value.toLowerCase()
-    return tasks.value.filter(task =>
-        task.title.toLowerCase().includes(searchLower) ||
-        task.text.toLowerCase().includes(searchLower)
-    )
+    return tasks.value.filter(task => {
+        // Объединяем все поля задачи в одну строку для поиска
+        const taskString = [
+            task.id,
+            task.title,
+            task.text,
+            task.price,
+            task.type,
+            task.payment,
+            task.time
+        ].join(' ').toLowerCase()
+        
+        return taskString.includes(searchLower)
+    })
 })
 
 const breadcrumbs = ref([
