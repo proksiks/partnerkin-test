@@ -13,4 +13,11 @@
 
 <script setup lang="ts">
 const { data: users } = await useFetch('/api/users');
+
+useHead({
+    title: 'Список профилей',
+    meta: [
+        { name: 'description', content: 'Список профилей' } 
+    ]
+})
 </script>

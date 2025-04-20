@@ -30,9 +30,9 @@ defineProps<{ task: ITask }>()
 const { show } = storeToRefs(useFeedbackModal())
 
 useHead({
-    htmlAttrs: {
-        class: show ? 'overflow-hidden' : '',
-    }
+    // htmlAttrs: {
+    //     class: show ? 'overflow-hidden' : '',
+    // }
 })
 </script>
 

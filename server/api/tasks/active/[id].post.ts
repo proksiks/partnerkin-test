@@ -1,4 +1,4 @@
-import { randomNumber } from '~/server/utils/randomIntFromInterval'
+import { db } from '~/server/database/config'
 
 interface FeedbackForm {
     tel: string
@@ -9,44 +9,80 @@ interface FeedbackForm {
     taskId?: number
 }
 
-const validateForm = (form: FeedbackForm) => {
-    if (!form.telegram?.trim()) {
-        throw createError({
-            statusCode: 400,
-            message: 'Telegram обязателен'
-        })
-    }
+export default defineEventHandler(async (event) => {
+    try {
+        const body = await readBody<FeedbackForm>(event)
+        const taskId = getRouterParam(event, 'id')
 
-    if (!form.email?.trim()) {
-        throw createError({
-            statusCode: 400,
-            message: 'Email обязателен'
-        })
-    }
+        if (!body.telegram?.trim()) {
+            throw createError({
+                statusCode: 400,
+                message: 'Telegram обязателен'
+            })
+        }
 
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-        throw createError({
-            statusCode: 400,
-            message: 'Некорректный email'
-        })
-    }
-}
+        if (!body.email?.trim()) {
+            throw createError({
+                statusCode: 400,
+                message: 'Email обязателен'
+            })
+        }
 
-export default defineEventHandler(async (event: H3Event) => {
-    const body = await readBody<FeedbackForm>(event)
-    const taskId = Number(event.context.params?.id)
-    
-    if (isNaN(taskId)) {
-        throw createError({
-            statusCode: 400,
-            message: 'Некорректный ID задачи'
-        })
-    }
+        if (!/^\S+@\S+\.\S+$/.test(body.email)) {
+            throw createError({
+                statusCode: 400,
+                message: 'Некорректный email'
+            })
+        }
 
-    // В реальном приложении здесь будет сохранение в базу данных
-    // Сейчас просто возвращаем успешный результат
-    return {
-        success: true,
-        message: 'Заявка успешно отправлена'
+        // Создаем таблицу tasks, если она не существует
+        await new Promise((resolve, reject) => {
+            db.run(`
+                CREATE TABLE IF NOT EXISTS tasks (
+                    id INTEGER PRIMARY KEY,
+                    title TEXT NOT NULL,
+                    status TEXT DEFAULT 'active',
+                    email TEXT,
+                    telegram TEXT,
+                    phone TEXT,
+                    message TEXT,
+                    do_not_call INTEGER DEFAULT 0,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `, (err) => {
+                if (err) reject(err);
+                else resolve(null);
+            });
+        });
+
+        // Создаем новую задачу в базе данных
+        await new Promise((resolve, reject) => {
+            db.run(`
+                INSERT INTO tasks (id, title, status, email, telegram, phone, message, do_not_call)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [
+                taskId,
+                'Новая задача',
+                'active',
+                body.email,
+                body.telegram,
+                body.tel,
+                body.message,
+                body.checkbox ? 1 : 0
+            ], (err) => {
+                if (err) reject(err);
+                else resolve(null);
+            });
+        });
+
+        return {
+            success: true,
+            message: 'Заявка успешно отправлена'
+        }
+    } catch (error) {
+        throw createError({
+            statusCode: 500,
+            message: 'Ошибка при создании задачи'
+        })
     }
 })
