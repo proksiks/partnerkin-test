@@ -2,6 +2,9 @@
 1. CSS Navigation
 2. CSS Peek
 
+В проекте лежит базовая настройка запросов в постмане файл в корне, для запуска потребуется настроить локальное окружение,
+POSTMAN.json
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

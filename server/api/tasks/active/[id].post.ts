@@ -14,6 +14,21 @@ export default defineEventHandler(async (event) => {
         const body = await readBody<FeedbackForm>(event)
         const taskId = getRouterParam(event, 'id')
 
+        // Проверяем, существует ли уже задача с таким ID
+        const existingTask = await new Promise((resolve, reject) => {
+            db.get('SELECT id FROM tasks WHERE id = ?', [taskId], (err, row) => {
+                if (err) reject(err);
+                else resolve(row);
+            });
+        });
+
+        if (existingTask) {
+            throw createError({
+                statusCode: 400,
+                message: 'Задача с таким ID уже существует'
+            });
+        }
+
         if (!body.telegram?.trim()) {
             throw createError({
                 statusCode: 400,
@@ -80,9 +95,16 @@ export default defineEventHandler(async (event) => {
             message: 'Заявка успешно отправлена'
         }
     } catch (error) {
+        console.error('Error creating task:', error);
+        if (error.code === 'SQLITE_CONSTRAINT') {
+            throw createError({
+                statusCode: 400,
+                message: 'Задача с таким ID уже существует'
+            });
+        }
         throw createError({
             statusCode: 500,
-            message: 'Ошибка при создании задачи'
+            message: 'Ошибка при создании задачи: ' + (error.message || '')
         })
     }
 })
