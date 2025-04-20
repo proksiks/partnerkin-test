@@ -1,0 +1,19 @@
+.feedback-form {
+}
+
+.feedback-form__textarea {
+  border: 0.0625rem solid var(--white);
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.feedback-form__input {
+  width: 100%;
+  display: block;
+  & + & {
+    margin-top: 0.75rem;
+  }
+}

@@ -1,0 +1,59 @@
+:root {
+  --black: black;
+  --white: white;
+  --text: #06162e;
+  --bg_main: #f3f5f8;
+  --button_prim_st: #f3d147;
+  --tag_green_accent: #86b836;
+  --tag_red_body: #ff3d00;
+  --tag_brown: #4c3536;
+
+  --p-20: 1.25rem;
+  --r-12: 0.75rem;
+
+  --fz-18: 1.125rem;
+  --fz-14: 0.875rem;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Gotham Pro", sans-serif;
+  height: 100svh;
+  line-height: 1.4;
+}
+
+#__nuxt {
+  height: 100%;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.3s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+}
+
+.page-leave-to {
+  opacity: 0;
+}
+
+.page-enter-to {
+  opacity: 1;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
