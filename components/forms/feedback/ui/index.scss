@@ -29,6 +29,7 @@
   margin-top: 1rem;
   margin-bottom: 1.5rem;
   input {
+    flex-shrink: 0;
     border: 1px solid var(--tag_gray_body);
     width: 1.125rem;
     height: 1.125rem;

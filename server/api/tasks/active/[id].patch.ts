@@ -9,7 +9,8 @@ export default defineEventHandler(async (event) => {
         const body = await readBody<UpdateTaskStatus>(event)
         const taskId = getRouterParam(event, 'id')
 
-        await db.run('UPDATE tasks SET status = ? WHERE id = ?', [body.status, taskId])
+        // Удаляем задачу при завершении
+        await db.run('DELETE FROM tasks WHERE id = ?', [taskId])
 
         return { success: true }
     } catch (error) {

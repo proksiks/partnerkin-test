@@ -1,6 +1,9 @@
 .profile-page {
   padding: 2.625rem 1.25rem;
   background-color: var(--bg_main);
+  @media (max-width: 480px) {
+    padding: 3.75rem 0.9375rem 1rem 0.9375rem;
+  }
 }
 .profile-page__wrapper {
   margin-top: 2rem;
@@ -16,6 +19,9 @@
 }
 .profile-page__left-side {
   position: relative;
+}
+.profile-page__right-side {
+  flex: 1;
 }
 .profile-page__head {
   width: 100%;

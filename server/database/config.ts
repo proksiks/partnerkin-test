@@ -16,14 +16,10 @@ export const db = new Database(dbPath, (err) => {
     }
     console.log('Connected to SQLite database');
 
-    // Create tasks table if it doesn't exist
-    db.run(`
-        CREATE TABLE IF NOT EXISTS active_tasks (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            price REAL NOT NULL,
-            status TEXT DEFAULT 'active',
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    `);
+    // Import and run migrations
+    import('./migrations').then(({ createTables }) => {
+        createTables()
+    }).catch(err => {
+        console.error('Error running migrations:', err)
+    });
 });

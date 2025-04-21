@@ -41,7 +41,6 @@ const filteredTasks = computed(() => {
             task.id,
             task.title,
             task.text,
-            task.price,
             task.type,
             task.payment,
             task.time

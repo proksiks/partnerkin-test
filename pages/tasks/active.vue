@@ -2,7 +2,7 @@
     <div class="active-tasks">
         <shared-breadcrumbs-ui :path="breadcrumbs" />
         <h1 class="active-tasks__title">Активные задания</h1>
-        <ul class="active-tasks__list" v-if="tasks?.length">
+        <ul class="active-tasks__list" v-if="tasks?.length" v-auto-animate>
             <li class="active-tasks__item" v-for="task in tasks" :key="task.id">
                 <div class="active-tasks__box">
                     <div class="active-tasks__title">{{ task.title }}</div>
@@ -83,6 +83,7 @@ useHead({
         display: flex;
         flex-direction: column;
         gap: 12px;
+        height: 100%;
     }
 
     &__status {
